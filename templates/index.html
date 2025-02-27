@@ -2,17 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Iris Classification</title>
+    <title>Sleep Disorder Prediction</title>
 </head>
 <body>
-    <form action="{{ url_for('predict')}}" method="POST">
-        Sepal-Length:  <input type="number" name="sepal_length"></br>
-        Sepal_Width:   <input type="number" name="sepal_width"></br>
-	Petal_Length:  <input type="number" name="petal_length"></br>
-	Petal_Width:   <input type="number" name="petal_width"></br>
-      
-        <input type=submit value=Submit>
-   </form>
-    My final prediction: {{ predict }}
+    <h1>Sleep Disorder Prediction</h1>
+    <form action="{{ url_for('predict') }}" method="POST">
+        <label for="age">Age:</label>
+        <input type="number" name="age" step="any" required><br><br>
+
+        <label for="sleep_duration">Sleep Duration:</label>
+        <input type="number" name="sleep_duration" step="any" required><br><br>
+
+        <label for="quality_of_sleep">Quality of Sleep:</label>
+        <input type="number" name="quality_of_sleep" step="any" required><br><br>
+
+        <label for="occupation_salesperson">Occupation Salesperson (0 or 1):</label>
+        <input type="number" name="occupation_salesperson" min="0" max="1" required><br><br>
+
+        <label for="category_overweight">BMICategory Overweight (0 or 1):</label>
+        <input type="number" name="category_overweight" min="0" max="1" required><br><br>
+
+        <label for="stress_level">Stress Level:</label>
+        <input type="number" name="stress_level" step="any" required><br><br>
+
+        <label for="occupation_doctor">Occupation Doctor (0 or 1):</label>
+        <input type="number" name="occupation_doctor" min="0" max="1" required><br><br>
+
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if predict %}
+        <h2>Prediction: {{ predict }}</h2>
+    {% endif %}
 </body>
 </html>

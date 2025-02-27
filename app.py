@@ -1,28 +1,38 @@
 from flask import Flask, render_template, request
 import numpy as np
-import pickle
 import joblib
+import os  # Added this line
+
 app = Flask(__name__)
-filename = 'file_iris.pkl'
-#model = pickle.load(open(filename, 'rb'))
+filename = 'file_model.pkl'
+
+# Load the model (adjust the model to accept 11 features)
 model = joblib.load(filename)
-#model = joblib.load(filename)
+
 @app.route('/')
-def index(): 
+def index():
     return render_template('index.html')
+
 @app.route('/predict', methods=['POST'])
 def predict():
-    Sepal_Length = request.form['sepal_length']
-    Sepal_Width = request.form['sepal_width']
-    Petak_Length = request.form['petal_length']
-    Petal_Width = request.form['petal_width']
+    # Get the user input from the form
+    Age = float(request.form['age'])
+    Sleep_Duration = float(request.form['sleep_duration'])
+    Quality_of_Sleep = float(request.form['quality_of_sleep'])
+    Occupation_Salesperson = int(request.form['occupation_salesperson'])
+    BMICategory_Overweight = int(request.form['category_overweight'])
+    Stress_Level = float(request.form['stress_level'])
+    Occupation_Doctor = int(request.form['occupation_doctor'])
 
-    
-      
-    pred = model.predict(np.array([[Sepal_Length, Sepal_Width, Petak_Length, Petal_Width ]]))
-    print(pred)
+    features = np.array([[Age, Sleep_Duration, Quality_of_Sleep, Occupation_Salesperson,
+                          BMICategory_Overweight, Stress_Level, Occupation_Doctor]])
+
+    # Predict using the model
+    pred = model.predict(features)
+
     return render_template('index.html', predict=str(pred))
 
-
+# Modified for Heroku deployment
 if __name__ == '__main__':
-    app.run
+    port = int(os.environ.get('PORT', 5001)) #Use 5001 or 5000 for local testing. Heroku will override.
+    app.run(host='0.0.0.0', port=port, debug=False) #Debug set to false.
