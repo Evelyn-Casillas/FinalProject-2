@@ -10,8 +10,11 @@ COPY . /app
 # Install the necessary dependencies
 RUN pip install -r requirements.txt
 
+# Set the FLASK_APP environment variable
+ENV FLASK_APP=app.py
+
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
 # Run the Flask app
-CMD ["python", "app.py"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
