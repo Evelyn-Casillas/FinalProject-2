@@ -2,37 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sleep Disorder Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            text-align: center;
+            margin: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+            text-align: left;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+        input[type="submit"]:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <h1>Sleep Disorder Prediction</h1>
     <form action="{{ url_for('predict') }}" method="POST">
         <label for="age">Age:</label>
-        <input type="number" name="age" step="any" required><br><br>
+        <input type="number" name="age" step="any" required>
 
-        <label for="sleep_duration">Sleep Duration:</label>
-        <input type="number" name="sleep_duration" step="any" required><br><br>
+        <label for="sleep_duration">Sleep Duration (hours):</label>
+        <input type="number" name="sleep_duration" step="any" required>
 
-        <label for="quality_of_sleep">Quality of Sleep:</label>
-        <input type="number" name="quality_of_sleep" step="any" required><br><br>
+        <label for="quality_of_sleep">Quality of Sleep (1-10):</label>
+        <input type="number" name="quality_of_sleep" step="any" required>
 
-        <label for="occupation_salesperson">Occupation Salesperson (0 or 1):</label>
-        <input type="number" name="occupation_salesperson" min="0" max="1" required><br><br>
+        <label for="occupation_salesperson">Occupation (Salesperson):</label>
+        <select name="occupation_salesperson" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
 
-        <label for="category_overweight">BMICategory Overweight (0 or 1):</label>
-        <input type="number" name="category_overweight" min="0" max="1" required><br><br>
+        <label for="category_overweight">BMI Category (Overweight):</label>
+        <select name="category_overweight" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
 
-        <label for="stress_level">Stress Level:</label>
-        <input type="number" name="stress_level" step="any" required><br><br>
+        <label for="stress_level">Stress Level (1-10):</label>
+        <input type="number" name="stress_level" step="any" required>
 
-        <label for="occupation_doctor">Occupation Doctor (0 or 1):</label>
-        <input type="number" name="occupation_doctor" min="0" max="1" required><br><br>
+        <label for="occupation_doctor">Occupation (Doctor):</label>
+        <select name="occupation_doctor" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
 
         <input type="submit" value="Predict">
     </form>
 
     {% if predict %}
-        <h2>Prediction: {{ predict }}</h2>
+        <div class="result">Prediction: {{ predict }}</div>
     {% endif %}
 </body>
 </html>

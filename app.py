@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request
 import numpy as np
 import joblib
-import os  # Added this line
+import os
 
 app = Flask(__name__)
 filename = 'file_model.pkl'
-
-# Load the model (adjust the model to accept 11 features)
 model = joblib.load(filename)
+
+# Mapping predictions to labels
+prediction_labels = {0: "Healthy", 1: "Sleep Apnea", 2: "Insomnia"}
 
 @app.route('/')
 def index():
@@ -15,7 +16,7 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get the user input from the form
+    # Get input data
     Age = float(request.form['age'])
     Sleep_Duration = float(request.form['sleep_duration'])
     Quality_of_Sleep = float(request.form['quality_of_sleep'])
@@ -27,14 +28,12 @@ def predict():
     features = np.array([[Age, Sleep_Duration, Quality_of_Sleep, Occupation_Salesperson,
                           BMICategory_Overweight, Stress_Level, Occupation_Doctor]])
 
-    # Predict using the model
-    pred = model.predict(features)
+    # Model prediction
+    pred = model.predict(features)[0]
+    pred_label = prediction_labels.get(pred, "Unknown")  # Convert to label
 
-    return render_template('index.html', predict=str(pred))
+    return render_template('index.html', predict=pred_label)
 
-# Modified for Heroku deployment
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5002)) #Use 5001 or 5000 for local testing. Heroku will override.
-    app.run(host='0.0.0.0', port=port, debug=False) #Debug set to false.
-
-
+    port = int(os.environ.get('PORT', 5002))
+    app.run(host='0.0.0.0', port=port, debug=False)
