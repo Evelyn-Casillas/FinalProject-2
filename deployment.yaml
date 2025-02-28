@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-model-deployment  # This can be anything you want to call the deployment
+spec:
+  replicas: 1  # Number of replicas you want to run
+  selector:
+    matchLabels:
+      app: my-model  # Ensure this matches the label below
+  template:
+    metadata:
+      labels:
+        app: my-model  # Must match the selector to correctly link the deployment
+    spec:
+      containers:
+      - name: my-model-container  # You can rename this as needed
+        image: mzcasillas97/fproject:latest  # Make sure this image is correct
+        ports:
+        - containerPort: 80  # Ensure this is the port your model container listens on
