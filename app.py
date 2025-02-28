@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import numpy as np
+import pandas as pd  # Import pandas to handle DataFrame
 import joblib
 import os
 
@@ -25,12 +26,20 @@ def predict():
     Stress_Level = float(request.form['stress_level'])
     Occupation_Doctor = int(request.form['occupation_doctor'])
 
-    features = np.array([[Age, Sleep_Duration, Quality_of_Sleep, Occupation_Salesperson,
-                          BMICategory_Overweight, Stress_Level, Occupation_Doctor]])
+    # Define feature names (must match the column names used during model training)
+    feature_names = ["Age", "Sleep_Duration", "Quality_of_Sleep",
+                     "Occupation_Salesperson", "BMICategory_Overweight",
+                     "Stress_Level", "Occupation_Doctor"]
 
-    # Model prediction
-    pred = model.predict(features)[0]
-    pred_label = prediction_labels.get(pred, "Unknown")  # Convert to label
+    # Convert to a DataFrame with column names
+    features_df = pd.DataFrame([[Age, Sleep_Duration, Quality_of_Sleep,
+                                 Occupation_Salesperson, BMICategory_Overweight,
+                                 Stress_Level, Occupation_Doctor]],
+                               columns=feature_names)
+
+    # Model prediction using the DataFrame
+    pred = model.predict(features_df)[0]  # Ensure prediction works with DataFrame
+    pred_label = prediction_labels.get(pred, "Unknown")  # Convert numeric prediction to label
 
     return render_template('index.html', predict=pred_label)
 
