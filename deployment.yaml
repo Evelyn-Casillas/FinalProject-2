@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-model-deployment  # This can be anything you want to call the deployment
+  name: my-model-deployment
 spec:
-  replicas: 1  # Number of replicas you want to run
+  replicas: 1
   selector:
     matchLabels:
-      app: my-model  # Ensure this matches the label below
+      app: my-model
   template:
     metadata:
       labels:
-        app: my-model  # Must match the selector to correctly link the deployment
+        app: my-model
     spec:
       containers:
-      - name: my-model-container  # You can rename this as needed
-        image: mzcasillas97/fproject:latest  # Make sure this image is correct
+      - name: python3-container
+        image: mzcasillas97/fproject:latest
         ports:
-        - containerPort: 80  # Ensure this is the port your model container listens on
+        - containerPort: 5002  # Update to 5002 to match Flask's internal port

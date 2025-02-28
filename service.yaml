@@ -7,6 +7,6 @@ spec:
     app: my-model
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 80           # Exposes port 80 externally
+      targetPort: 5002    # Routes traffic to port 5002 inside the container
   type: NodePort
