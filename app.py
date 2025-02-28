@@ -17,32 +17,54 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get input data
-    Age = float(request.form['age'])
-    Sleep_Duration = float(request.form['sleep_duration'])
-    Quality_of_Sleep = float(request.form['quality_of_sleep'])
-    Occupation_Salesperson = int(request.form['occupation_salesperson'])
-    BMICategory_Overweight = int(request.form['category_overweight'])
-    Stress_Level = float(request.form['stress_level'])
-    Occupation_Doctor = int(request.form['occupation_doctor'])
+    try:
+        # Get input data from the form
+        Age = float(request.form['age'])
+        Sleep_Duration = float(request.form['sleep_duration'])
+        Quality_of_Sleep = float(request.form['quality_of_sleep'])
+        Occupation_Salesperson = int(request.form['occupation_salesperson'])
+        BMICategory_Overweight = int(request.form['category_overweight'])
+        Stress_Level = float(request.form['stress_level'])
+        Occupation_Doctor = int(request.form['occupation_doctor'])
 
-    # Define feature names (must match the column names used during model training)
-    feature_names = ["Age", "Sleep_Duration", "Quality_of_Sleep",
-                     "Occupation_Salesperson", "BMICategory_Overweight",
-                     "Stress_Level", "Occupation_Doctor"]
+        # Define the feature names used during training (must match exactly)
+        feature_names = [
+            "Age", "Sleep Duration", "Quality of Sleep",
+            "Occupation_Salesperson", "BMI Category_Overweight",
+            "Stress Level", "Occupation_Doctor"
+        ]
 
-    # Convert to a DataFrame with column names
-    features_df = pd.DataFrame([[Age, Sleep_Duration, Quality_of_Sleep,
-                                 Occupation_Salesperson, BMICategory_Overweight,
-                                 Stress_Level, Occupation_Doctor]],
-                               columns=feature_names)
+        # Convert the input data into a DataFrame
+        features_df = pd.DataFrame([[Age, Sleep_Duration, Quality_of_Sleep,
+                                     Occupation_Salesperson, BMICategory_Overweight,
+                                     Stress_Level, Occupation_Doctor]],
+                                   columns=[
+                                       "Age", "Sleep_Duration", "Quality_of_Sleep",
+                                       "Occupation_Salesperson", "BMICategory_Overweight",
+                                       "Stress_Level", "Occupation_Doctor"
+                                   ])
 
-    # Model prediction using the DataFrame
-    pred = model.predict(features_df)[0]  # Ensure prediction works with DataFrame
-    pred_label = prediction_labels.get(pred, "Unknown")  # Convert numeric prediction to label
+        # Rename columns to match the feature names used during training
+        features_df.rename(columns={
+            "Sleep_Duration": "Sleep Duration",
+            "Quality_of_Sleep": "Quality of Sleep",
+            "BMICategory_Overweight": "BMI Category_Overweight",
+            "Stress_Level": "Stress Level"
+        }, inplace=True)
 
-    return render_template('index.html', predict=pred_label)
+        # Debugging: Print feature names before prediction
+        print("Feature columns before prediction:", features_df.columns)
+
+        # Model prediction
+        pred = model.predict(features_df)[0]
+        pred_label = prediction_labels.get(pred, "Unknown")  # Convert numeric prediction to label
+
+        return render_template('index.html', predict=pred_label)
+
+    except Exception as e:
+        print("Error:", e)  # Print error for debugging
+        return render_template('index.html', predict="Error processing request")
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5002))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=True)
